@@ -1,3 +1,4 @@
+from PIL.Image import NONE
 import matplotlib.pyplot as plt
 from astropy.visualization import astropy_mpl_style
 #plt.style.use(astropy_mpl_style)
@@ -12,6 +13,7 @@ from matplotlib.colors import LogNorm
 import os
 import urllib
 import ssl
+menu="1-dowloand files but week\n2-insert file\n 3-view scatter plot\n 4-view d2 histogram\n 5-view 2-d histogram color\n6- quit"
 def do_some_prompts():
     #Todo - make this better prompt, probably with GUI
     #in this file, I want to prompt the user for a date range
@@ -50,48 +52,61 @@ def download_some_files(week_strt, week_end):
         #print(dl_link)
         urllib.request.urlretrieve(dl_link,"lat_photon_weekly_w{}_p305_v001.fits".format(int_to_string(i)) )
 def main():
-    start_week, end_wk, low_eng, high_eng = 9,15,20,25#do_some_prompts()
+    #start_week, end_wk, low_eng, high_eng = 9,15,20,25#do_some_prompts()
     # now we go out and download the files
-    download_some_files(start_week,end_wk)
-    '''
-    user_input=input("enter fit file\n")
-    image_file=fits.open(user_input, memmap= True)
-    image_file.info()
-    evt_data=Table(image_file[1].data)
+    #download_some_files(start_week,end_wk)
+    print(menu)
+    user_input=input("enter option:")
+    while(user_input !="6"):
+        
+        image_file=NONE
+        evt_data=NONE
+        if user_input == "1":
+            start_week=int(input("enter start week: "))
+            end_wk=int(input("enter end week: "))
+           
+            download_some_files(start_week,end_wk)
+        if user_input =="2":
+            user_input=input("enter fit file\n")
+            image_file=fits.open(user_input, memmap= True)
+            image_file.info()
+            evt_data=Table(image_file[1].data)
+        if user_input == "3":
+            fig, ax = plt.subplots(1, figsize=(10, 10))
+            #test_dat = evt_data[0:100]  # subset of data for quickness
+            # test_dat_max = max(test_dat["ENERGY"])
+            act_dat_max = max(evt_data["ENERGY"])
+            # ax.scatter(test_dat['RA'], test_dat['DEC'], c=test_dat['ENERGY']/test_dat_max, s=.001 )
+            ax.scatter(evt_data['RA'], evt_data['DEC'], c=1 / evt_data['ENERGY'], s=.01)
 
-    fig, ax = plt.subplots(1, figsize=(10, 10))
-    #test_dat = evt_data[0:100]  # subset of data for quickness
-    # test_dat_max = max(test_dat["ENERGY"])
-    act_dat_max = max(evt_data["ENERGY"])
-    # ax.scatter(test_dat['RA'], test_dat['DEC'], c=test_dat['ENERGY']/test_dat_max, s=.001 )
-    ax.scatter(evt_data['RA'], evt_data['DEC'], c=1 / evt_data['ENERGY'], s=.01)
 
+            # showing scatter plot
+            energy_hist = plt.scatter(evt_data["RA"],evt_data['ENERGY'])
+            plt.show()
+        if user_input =="4":
+        # showing 2 d histagram
+            ii = np.in1d(evt_data['CONVERSION_TYPE'], [0, 1])
+            np.sum(ii)
+            NBINS = (500,500)
+            img_zero, yedges, xedges = np.histogram2d(evt_data['RA'][ii], evt_data['DEC'][ii], NBINS)
+            extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
 
-    # showing scatter plot
-    energy_hist = plt.scatter(evt_data["RA"],evt_data['ENERGY'])
-    plt.show()
-    # showing 2 d histagram
-    ii = np.in1d(evt_data['CONVERSION_TYPE'], [0, 1])
-    np.sum(ii)
-    NBINS = (500,500)
-    img_zero, yedges, xedges = np.histogram2d(evt_data['RA'][ii], evt_data['DEC'][ii], NBINS)
-    extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
+            plt.imshow(img_zero)
+            plt.show()
 
-    plt.imshow(img_zero)
-    plt.show()
+        #showing plt hist2d 
+        if user_input == "5":
+            NBINS = (100,100)
+            img_zero_mpl = plt.hist2d(evt_data['RA'][ii], evt_data['DEC'][ii], NBINS, cmap='viridis', norm=LogNorm())
 
-    #showing plt hist2d 
-    NBINS = (100,100)
-    img_zero_mpl = plt.hist2d(evt_data['RA'][ii], evt_data['DEC'][ii], NBINS, cmap='viridis', norm=LogNorm())
+            cbar = plt.colorbar(ticks=[1.0,3.0,6.0])
+            cbar.ax.set_yticklabels(['1','3','6'])
 
-    cbar = plt.colorbar(ticks=[1.0,3.0,6.0])
-    cbar.ax.set_yticklabels(['1','3','6'])
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.show()
 
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.show()
-
-'''
+        user_input=input("enter option:")
 
 
 
