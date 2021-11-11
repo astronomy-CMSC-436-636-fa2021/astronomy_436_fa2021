@@ -57,6 +57,7 @@ def main():
     # now we go out and download the files
     download_some_files(start_week,end_wk)
     full_evt_data = list()
+    total_sum = 0
     #user_input=input("enter fit file\n")
     for i in range (start_week, end_wk+1):
         file_to_open = str(Path().absolute()) + "\\lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits"
@@ -64,16 +65,6 @@ def main():
         #image_file.info() debug info about the FITS
         full_evt_data.append(Table(image_file[1].data)) #add opened table to collection
         evt_data = full_evt_data[i - start_week] # give it evt_data name for backwards compatability
-
-
-        #np.sum(ii)
-        #NBINS = (500,500)
-        #img_zero, yedges, xedges = np.histogram2d(evt_data['RA'][ii], evt_data['DEC'][ii], NBINS)
-        # extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
-
-        #plt.imshow(img_zero)
-        #plt.show()
-
         # showing plt hist2d
         nbins = (100,100)
         fig, ax = plt.subplots(1)
@@ -93,6 +84,34 @@ def main():
         plt.xlabel('L')
         plt.ylabel('B')
         plt.show()
+        # end occurence log plots, now try energy
+        sum_energy = 0
+        sum_energy = sum(evt_data['ENERGY'])
+        total_sum = total_sum + sum_energy
+        #print (sum_energy)
+        nbins = (100, 100)
+        fig, ax = plt.subplots(1)
+        ii = np.in1d(evt_data['CONVERSION_TYPE'], [0, 1])
+        img_two_mpl = plt.scatter(evt_data['RA'][ii], evt_data['DEC'][ii],c= evt_data['ENERGY']/sum_energy, s = .01)
+        #cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+        #cbar.ax.set_yticklabels(['1', '3', '6'])
+        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.xlabel('RA')
+        plt.ylabel('DEC')
+        plt.show()
+        fig, ax = plt.subplots(1)
+        img_three_mpl = plt.scatter(evt_data['L'][ii], evt_data['B'][ii],c= evt_data['ENERGY']/sum_energy, s = 0.01)
+        #cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+        #cbar.ax.set_yticklabels(['1', '3', '6'])
+        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.xlabel('L')
+        plt.ylabel('B')
+        plt.show()
+        evt_data = 0
+
+    # Start together data!
+    if (start_week == end_wk):
+        return 0 # don't bother with not other crap
     concat_table = vstack(full_evt_data)
     ii = np.in1d(concat_table['CONVERSION_TYPE'], [0, 1])
     NBINS = (100, 100)
@@ -101,15 +120,34 @@ def main():
     img_zero_mpl = plt.hist2d(concat_table['RA'][ii], concat_table['DEC'][ii], NBINS, cmap='viridis', norm=LogNorm())
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
-    plt.title("Time Averaged from week" + int_to_string(start_week) + "to" + int_to_string(end_wk))
+    plt.title("Time Averaged from week " + int_to_string(start_week) + " to " + int_to_string(end_wk))
     plt.xlabel('RA')
     plt.ylabel('DEC')
     plt.show()
+
     # start on collection L/B
     fig, ax = plt.subplots(1)
     img_one_mpl = plt.hist2d(concat_table['L'][ii], concat_table['B'][ii], NBINS, cmap='viridis', norm=LogNorm())
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
+    plt.title("Time Averaged from week " + int_to_string(start_week) + " to " + int_to_string(end_wk))
+    plt.xlabel('L')
+    plt.ylabel('B')
+    plt.show()
+
+    fig, ax = plt.subplots(1)
+    #ii = np.in1d(evt_data['CONVERSION_TYPE'], [0, 1])
+    img_two_mpl = plt.scatter(concat_table['RA'][ii], concat_table['DEC'][ii], c=concat_table['ENERGY'] / total_sum, s=.01)
+    # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+    # cbar.ax.set_yticklabels(['1', '3', '6'])
+    plt.title("Time Averaged from week " + int_to_string(start_week) + " to " + int_to_string(end_wk))
+    plt.xlabel('RA')
+    plt.ylabel('DEC')
+    plt.show()
+    fig, ax = plt.subplots(1)
+    img_three_mpl = plt.scatter(concat_table['L'][ii], concat_table['B'][ii], c=concat_table['ENERGY'] / total_sum, s=0.01)
+    # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+    # cbar.ax.set_yticklabels(['1', '3', '6'])
     plt.title("Time Averaged from week " + int_to_string(start_week) + " to " + int_to_string(end_wk))
     plt.xlabel('L')
     plt.ylabel('B')
