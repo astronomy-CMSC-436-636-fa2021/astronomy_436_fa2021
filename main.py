@@ -14,6 +14,7 @@ import os
 import urllib
 import ssl
 from pathlib import Path
+import copy
 
 full_evt_data = []
 full_sum_energy = 0
@@ -95,7 +96,7 @@ def procedural_gen_full(start_week, end_week, energy_start, energy_end):
         del (my_table['DIFRSP3'])
         del (my_table['DIFRSP4'])
         # we are going to use the weights argument in hist2d to do the cutoffs
-        my_weights = my_table['ENERGY']
+        my_weights = copy.deepcopy(my_table['ENERGY'])
         for loop_through_weights in range(len(my_weights)):
             item = my_weights[loop_through_weights]
             if energy_start == 0 or energy_end == 0:
@@ -104,7 +105,7 @@ def procedural_gen_full(start_week, end_week, energy_start, energy_end):
                 my_weights[loop_through_weights] = 0 # if the item is outside the range, we replace it with 0
 
         full_weights.extend(my_weights)
-        #my_table.show_in_browser()
+        my_table.show_in_browser()
         #myTable.remove_rows()
         full_evt_data.append(my_table)  # add opened table to collection
         hist_plot_occurrences(my_table, i,my_weights)
@@ -129,10 +130,10 @@ def hist_plot_occurrences(evt_data, i, my_weights):
     cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
         save_title = f"OccurrenceWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(f"Time Averaged from week {int_to_string(my_start_week)} to {int_to_string(my_end_week)}")
+        plt.title(f"Occurrence Weighted Time Averaged from week {int_to_string(my_start_week)} to {int_to_string(my_end_week)}")
     else:
         save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
-        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.title("Occurrence Weighted - week " + int_to_string(i))
     plt.xlabel('RA')
     plt.ylabel('DEC')
     plt.savefig(fname=str(Path().absolute())+f"\\outputs\\{save_title}.svg",format='svg')
@@ -143,10 +144,10 @@ def hist_plot_occurrences(evt_data, i, my_weights):
     cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
         save_title = f"OccurrenceWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(f"Occurrence_weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        plt.title(f"Occurrence Weighted Time from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
         save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
-        plt.title("Occurrence_weighted, lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.title("Occurrence Weighted - week" + int_to_string(i))
     plt.xlabel('L')
     plt.ylabel('B')
     plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
@@ -165,10 +166,10 @@ def energy_hist(evt_data, i, my_weights):
     # cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
         save_title = f"EnergyWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(save_title := f"Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        plt.title(save_title := f"Energy Weighted Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
         save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
-        plt.title(save_title := "lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.title(save_title := "Energy Weighted - week" + int_to_string(i))
     plt.xlabel('RA')
     plt.ylabel('DEC')
     plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
