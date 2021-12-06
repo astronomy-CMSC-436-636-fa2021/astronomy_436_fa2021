@@ -128,22 +128,28 @@ def hist_plot_occurrences(evt_data, i, my_weights):
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
+        save_title = f"OccurrenceWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
         plt.title(f"Time Averaged from week {int_to_string(my_start_week)} to {int_to_string(my_end_week)}")
     else:
+        save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
         plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
     plt.xlabel('RA')
     plt.ylabel('DEC')
+    plt.savefig(fname=str(Path().absolute())+f"\\outputs\\{save_title}.svg",format='svg')
     plt.show()
     fig, ax = plt.subplots(1)
     img_one_mpl = plt.hist2d(evt_data['L'][ii], evt_data['B'][ii], nbins, cmap='viridis', norm=LogNorm(), weights=np.ceil(np.tanh(my_weights)))
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
-        plt.title(f"Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        save_title = f"OccurrenceWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
+        plt.title(f"Occurrence_weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
-        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
+        plt.title("Occurrence_weighted, lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
     plt.xlabel('L')
     plt.ylabel('B')
+    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
     plt.show()
 
 
@@ -158,30 +164,42 @@ def energy_hist(evt_data, i, my_weights):
     # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     # cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
-        plt.title(f"Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        save_title = f"EnergyWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
+        plt.title(save_title := f"Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
-        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
+        plt.title(save_title := "lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
     plt.xlabel('RA')
     plt.ylabel('DEC')
+    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
     plt.show()
     fig, ax = plt.subplots(1)
     img_three_mpl = plt.hist2d(evt_data['L'][ii], evt_data['B'][ii],nbins,cmap='cividis', weights=my_weights/sum_energy,norm=LogNorm())
     # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     # cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
-        plt.title(f"Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        save_title = f"EnergyWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
+        plt.title(save_title := f"Energy Weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
-        plt.title("lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
+        plt.title(save_title := "Energy Weighted,lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
     plt.xlabel('L')
     plt.ylabel('B')
+    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
     plt.show()
-    evt_data = 0
 
 
 def main():
     global start_week, end_week, start_eng_range, end_eng_range
     start_week, end_week, start_eng_range, end_eng_range = do_some_prompts()
     download_some_files(start_week, end_week)
+    try:
+        if os.path.isdir(str(Path().absolute()) + f"\\outputs\\"):
+            pass
+        else:
+            os.makedirs(str(Path().absolute()) + f"\\outputs\\")
+    except:
+        print("Raised Exception")
     procedural_gen_full(start_week, end_week, start_eng_range, end_eng_range)
 
 
