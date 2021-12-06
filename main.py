@@ -105,7 +105,7 @@ def procedural_gen_full(start_week, end_week, energy_start, energy_end):
                 my_weights[loop_through_weights] = 0 # if the item is outside the range, we replace it with 0
 
         full_weights.extend(my_weights)
-        my_table.show_in_browser()
+        #my_table.show_in_browser()
         #myTable.remove_rows()
         full_evt_data.append(my_table)  # add opened table to collection
         hist_plot_occurrences(my_table, i,my_weights)
