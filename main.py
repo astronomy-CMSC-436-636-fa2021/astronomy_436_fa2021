@@ -180,10 +180,10 @@ def energy_hist(evt_data, i, my_weights):
     # cbar.ax.set_yticklabels(['1', '3', '6'])
     if i < 0:
         save_title = f"EnergyWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(save_title := f"Energy Weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
+        plt.title(f"Energy Weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
     else:
         save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
-        plt.title(save_title := "Energy Weighted,lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+        plt.title("Energy Weighted,lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
     plt.xlabel('L')
     plt.ylabel('B')
     plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
