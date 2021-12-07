@@ -109,7 +109,7 @@ def procedural_gen_full(start_week, end_week, energy_start, energy_end):
         #myTable.remove_rows()
         full_evt_data.append(my_table)  # add opened table to collection
         hist_plot_occurrences(my_table, i,my_weights)
-        energy_hist(my_table, i,my_weights)
+        energy_hist(my_table, i, my_weights)
     # now that those are done, we can do it for the full image
     concat_table = vstack(full_evt_data)
     hist_plot_occurrences(concat_table, -1,full_weights)
@@ -171,14 +171,15 @@ def energy_hist(evt_data, i, my_weights):
     plt.xlabel('RA')
     plt.ylabel('DEC')
     if i < 0:
+        print("Making RADEC averages for energy")
         save_title = f"Energy-RADEC-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
         plt.title(f"Energy Weighted Averaged Weeks: {int_to_string(start_week)} to {int_to_string(end_week)}")
         plt.savefig(fname=str(Path().absolute()) + f"\\Energy-avgs\\{save_title}.jpg", format='jpg')
     else:
+        print(f"making SINGLES RADEC energy week {i}")
         save_title = f"Energy-RADEC-week-{int_to_string(i)}"
         plt.title("Energy Weighted - week: " + int_to_string(i))
         plt.savefig(fname=str(Path().absolute()) + f"\\Energy-singles\\{save_title}.jpg", format='jpg')
-
     #plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
     plt.show()
     fig, ax = plt.subplots(1)
@@ -188,11 +189,13 @@ def energy_hist(evt_data, i, my_weights):
     plt.xlabel('L')
     plt.ylabel('B')
     if i < 0:
+        #print("making averages energy LB")
         save_title = f"Energy-LB-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
         plt.title(f"Energy Weighted Averaged Weeks: {int_to_string(start_week)} to {int_to_string(end_week)}")
         plt.savefig(fname=str(Path().absolute()) + f"\\Energy-avgs\\{save_title}.jpg", format='jpg')
     else:
-        save_title = f"Energy-LB-week-{int_to_string(start_week)}"
+        #print(f"making SINGLES LB energy week {i}")
+        save_title = f"Energy-LB-week-{int_to_string(i)}"
         plt.title("Energy Weighted - week: " + int_to_string(i))
         plt.savefig(fname=str(Path().absolute()) + f"\\Energy-singles\\{save_title}.jpg", format='jpg')
     #plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
@@ -210,7 +213,7 @@ def main():
     make_dir("Energy-singles")
     make_dir("Energy-avgs")
     procedural_gen_full(start_week, end_week, start_eng_range, end_eng_range)
-
+    print("All done!")
 
 def make_dir(dir_name):
     try:
