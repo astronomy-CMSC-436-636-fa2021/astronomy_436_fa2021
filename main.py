@@ -156,7 +156,7 @@ def hist_plot_occurrences(evt_data, i, my_weights):
 
 def energy_hist(evt_data, i, my_weights):
     # uses the sum of energy to create a scatter plot with the scaling being the current event_data/sum
-    sum_energy = sum(evt_data['ENERGY'])
+    sum_energy = sum(my_weights)
     # print (sum_energy)
     nbins = (500, 500)
     fig, ax = plt.subplots(1)
