@@ -109,7 +109,7 @@ def procedural_gen_full(start_week, end_week, energy_start, energy_end):
         #myTable.remove_rows()
         full_evt_data.append(my_table)  # add opened table to collection
         hist_plot_occurrences(my_table, i,my_weights)
-        energy_hist(my_table, i,my_weights)
+        energy_hist(my_table, i, my_weights)
     # now that those are done, we can do it for the full image
     concat_table = vstack(full_evt_data)
     hist_plot_occurrences(concat_table, -1,full_weights)
@@ -128,66 +128,75 @@ def hist_plot_occurrences(evt_data, i, my_weights):
     img_zero_mpl = plt.hist2d(evt_data['RA'][ii], evt_data['DEC'][ii], nbins, cmap='viridis', norm=LogNorm(), weights=np.ceil(np.tanh(my_weights)))
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
-    if i < 0:
-        save_title = f"OccurrenceWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(f"Occurrence Weighted Time Averaged from week {int_to_string(my_start_week)} to {int_to_string(my_end_week)}")
-    else:
-        save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
-        plt.title("Occurrence Weighted - week " + int_to_string(i))
     plt.xlabel('RA')
     plt.ylabel('DEC')
-    plt.savefig(fname=str(Path().absolute())+f"\\outputs\\{save_title}.svg",format='svg')
-    #plt.show()
+    if i < 0:
+        save_title = f"Occurrence-RADEC-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
+        plt.title(f"Occurrences on Weeks{int_to_string(my_start_week)} to {int_to_string(my_end_week)}")
+        plt.savefig(fname=str(Path().absolute()) + f"\\Occurrence-avgs\\{save_title}.jpg", format='jpg')
+    else:
+        save_title = f"Occurrence-RADEC-week-{int_to_string(i)}"
+        plt.title("Occurrences on Week " + int_to_string(i))
+        plt.savefig(fname=str(Path().absolute()) + f"\\Occurrence-singles\\{save_title}.jpg", format='jpg')
+    plt.show()
+
     fig, ax = plt.subplots(1)
     img_one_mpl = plt.hist2d(evt_data['L'][ii], evt_data['B'][ii], nbins, cmap='viridis', norm=LogNorm(), weights=np.ceil(np.tanh(my_weights)))
     cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
     cbar.ax.set_yticklabels(['1', '3', '6'])
-    if i < 0:
-        save_title = f"OccurrenceWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(f"Occurrence Weighted Time from week {int_to_string(start_week)} to {int_to_string(end_week)}")
-    else:
-        save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
-        plt.title("Occurrence Weighted - week" + int_to_string(i))
     plt.xlabel('L')
     plt.ylabel('B')
-    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
-    #plt.show()
+    if i < 0:
+        save_title = f"Occurrence-LB-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
+        plt.title(f"OccurrenceWeeks: {int_to_string(start_week)}-to-{int_to_string(end_week)}")
+        plt.savefig(fname=str(Path().absolute()) + f"\\Occurrence-avgs\\{save_title}.jpg", format='jpg')
+    else:
+        save_title = f"Occurrence-LB-week-{int_to_string(i)}"
+        plt.title("Occurrences on Week " + int_to_string(i))
+        plt.savefig(fname=str(Path().absolute()) + f"\\Occurrence-singles\\{save_title}.jpg", format='jpg')
+    #plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
+    plt.show()
 
 
 def energy_hist(evt_data, i, my_weights):
     # uses the sum of energy to create a scatter plot with the scaling being the current event_data/sum
-    sum_energy = sum(evt_data['ENERGY'])
+    sum_energy = sum(my_weights)
     # print (sum_energy)
     nbins = (500, 500)
     fig, ax = plt.subplots(1)
     ii = np.in1d(evt_data['CONVERSION_TYPE'], [0, 1])
     img_two_mpl = plt.hist2d(evt_data['RA'][ii], evt_data['DEC'][ii],nbins,cmap='cividis', weights=my_weights/sum_energy, norm=LogNorm())
-    # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
-    # cbar.ax.set_yticklabels(['1', '3', '6'])
-    if i < 0:
-        save_title = f"EnergyWeighted_RADEC_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(save_title := f"Energy Weighted Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
-    else:
-        save_title = f"OccurrenceWeighted_RADEC_week_{int_to_string(i)}"
-        plt.title(save_title := "Energy Weighted - week" + int_to_string(i))
+    cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+    cbar.ax.set_yticklabels(['1', '3', '6'])
     plt.xlabel('RA')
     plt.ylabel('DEC')
-    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
-    #plt.show()
+    if i < 0:
+        print("Making RADEC averages for energy")
+        save_title = f"Energy-RADEC-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
+        plt.title(f"Energy Weighted Averaged Weeks: {int_to_string(start_week)} to {int_to_string(end_week)}")
+        plt.savefig(fname=str(Path().absolute()) + f"\\Energy-avgs\\{save_title}.jpg", format='jpg')
+    else:
+        print(f"making SINGLES RADEC energy week {i}")
+        save_title = f"Energy-RADEC-week-{int_to_string(i)}"
+        plt.title("Energy Weighted - week: " + int_to_string(i))
+        plt.savefig(fname=str(Path().absolute()) + f"\\Energy-singles\\{save_title}.jpg", format='jpg')
+    #plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
+    plt.show()
     fig, ax = plt.subplots(1)
     img_three_mpl = plt.hist2d(evt_data['L'][ii], evt_data['B'][ii],nbins,cmap='cividis', weights=my_weights/sum_energy,norm=LogNorm())
-    # cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
-    # cbar.ax.set_yticklabels(['1', '3', '6'])
-    if i < 0:
-        save_title = f"EnergyWeighted_LB_weeks_{int_to_string(start_week)}_to_{int_to_string(end_week)}"
-        plt.title(save_title := f"Energy Weighted, Time Averaged from week {int_to_string(start_week)} to {int_to_string(end_week)}")
-    else:
-        save_title = f"OccurrenceWeighted_LB_week_{int_to_string(i)}"
-        plt.title(save_title := "Energy Weighted,lat_photon_weekly_w" + int_to_string(i) + "_p305_v001.fits")
+    cbar = plt.colorbar(ticks=[1.0, 3.0, 6.0])
+    cbar.ax.set_yticklabels(['1', '3', '6'])
     plt.xlabel('L')
     plt.ylabel('B')
-    plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
-    #plt.show()
-
-
-
+    if i < 0:
+        #print("making averages energy LB")
+        save_title = f"Energy-LB-weeks-{int_to_string(start_week)}-to-{int_to_string(end_week)}"
+        plt.title(f"Energy Weighted Averaged Weeks: {int_to_string(start_week)} to {int_to_string(end_week)}")
+        plt.savefig(fname=str(Path().absolute()) + f"\\Energy-avgs\\{save_title}.jpg", format='jpg')
+    else:
+        #print(f"making SINGLES LB energy week {i}")
+        save_title = f"Energy-LB-week-{int_to_string(i)}"
+        plt.title("Energy Weighted - week: " + int_to_string(i))
+        plt.savefig(fname=str(Path().absolute()) + f"\\Energy-singles\\{save_title}.jpg", format='jpg')
+    #plt.savefig(fname=str(Path().absolute()) + f"\\outputs\\{save_title}.svg", format='svg')
+    plt.show()
