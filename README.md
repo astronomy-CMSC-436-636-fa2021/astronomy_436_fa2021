@@ -1,5 +1,9 @@
 #<astronomy>
-
+David Mercanti
+Dhruv Jagdishkumar Patel
+Alexis Richardson
+Pratik Shukla
+ 
 allows to the user to view fit files
 
 ## running the GUI
@@ -15,3 +19,4 @@ allows to the user to view fit files
 if step 1-3 has not but done, then please follow those step in GUI
 1. run the cmd
     `python main.py`
+    
