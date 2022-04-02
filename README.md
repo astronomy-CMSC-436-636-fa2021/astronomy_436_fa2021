@@ -1,5 +1,5 @@
-# Fermi LAT 
 ## David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
+# Fermi LAT 
  
 allows to the user to view fit files
 
