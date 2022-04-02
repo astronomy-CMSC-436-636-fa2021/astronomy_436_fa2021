@@ -1,4 +1,5 @@
-# <astronomy> David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
+# Fermi LAT 
+## David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
  
 allows to the user to view fit files
 
