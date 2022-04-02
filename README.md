@@ -1,4 +1,4 @@
-#<astronomy> David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
+# <astronomy> David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
  
 allows to the user to view fit files
 
