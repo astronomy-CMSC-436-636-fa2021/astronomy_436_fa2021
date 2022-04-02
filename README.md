@@ -1,5 +1,7 @@
+## David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla  
+
 # Fermi LAT
-## David Mercanti, Dhruv Jagdishkumar Patel, Alexis Richardson, Pratik Shukla
+
 ## Introduction
 The Fermi Gamma-ray Space telescope has been in service since June 2009.  Observations are made by the Large Array Telescope (or LAT) which is the principal instrument attached to the Fermi Space Observatory. The LAT scans the night sky daily for photon events which indicate high energy photons coming from a recorded point in the sky, at a recorded energy. The data recorded is in fits files, and is collected weekly. Here, we try to aggregate data from multiple weeks of data, and we manage to do it automatically.   
   
